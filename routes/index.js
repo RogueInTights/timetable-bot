@@ -32,7 +32,9 @@ router.command('tomorrow', ctx => {
     day = (day < 6) ? day + 1 : 0;
 
     let response =
-        helper.timetableByDay(day);
+        (day === 0) ?
+            helper.timetableByNextDay(day) :
+            helper.timetableByDay(day);
     
     ctx.replyWithMarkdown(response);
 });

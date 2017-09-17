@@ -9,7 +9,7 @@ const appInfo = require('./package.json');
 const app = http.createServer((req, res) => {
     res.end('Telegram bot "Timetable IPO-14". Version: ' + appInfo.version);
 });
-app.listen(8080);
+app.listen(8080, () => console.log('Web app is running on port 8080'));
 
 
 /* Bot */

@@ -3,8 +3,8 @@ const data = require('../data/timetable.json');
 // Oddity of week:
 module.exports.oddityOfWeek = (next) => {
     let now = new Date();
-    let startTimeOfCurrentYear = (new Date(now.getFullYear(), 0, 1).getTime());
-    let currentTime = now.getTime();
+    let startTimeOfCurrentYear = (new Date(now.getUTCFullYear(), 0, 1).getTime());
+    let currentTime = now.getTime() + 28800000;
     let pastTimeOfStartCurrentYear = currentTime - startTimeOfCurrentYear;
     
     // Division by number of milliseconds in one week:
@@ -56,7 +56,7 @@ module.exports.today = () => {
 };
 
 // Timetable by day for current week:
-module.exports.timetableByDay = day => {
+module.exports.timetableByDay = (day, group) => {
     let when = '';
 
     let today = module.exports.today();
@@ -83,14 +83,20 @@ module.exports.timetableByDay = day => {
 
     let response = `*Расписание на ${dayRuString}:*\n\n`;
     
-    for (let entry of data[module.exports.oddityOfWeek()][dayString])
+    let remainingEntries = data[module.exports.oddityOfWeek()][dayString];
+
+    if (group) remainingEntries = remainingEntries.filter(
+        entry => [group, 3].indexOf(entry.group) !== -1
+    );
+
+    for (let entry of remainingEntries)
         response += module.exports.entryToString(entry, true);
 
     return response;
 };
 
 // Timetable by day for next week:
-module.exports.timetableByNextDay = day => {
+module.exports.timetableByNextDay = (day, group) => {
     let when = '';
 
     if ([0, 1, 3].indexOf(day) !== -1)
@@ -111,7 +117,13 @@ module.exports.timetableByNextDay = day => {
 
     let response = `*Расписание на ${when}:*\n\n`;
 
-    for (let entry of data[module.exports.oddityOfWeek(true)][dayString])
+    let remainingEntries = data[module.exports.oddityOfWeek(true)][dayString];
+    
+    if (group) remainingEntries = remainingEntries.filter(
+        entry => [group, 3].indexOf(entry.group) !== -1
+    );
+
+    for (let entry of remainingEntries)
         response += module.exports.entryToString(entry, true);
 
     return response;

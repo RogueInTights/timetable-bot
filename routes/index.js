@@ -144,8 +144,10 @@ router.command('next', ctx => {
         nextLessons = data[helper.oddityOfWeek()][dayString].filter(
             item => {
                 let time = item.time.split(':');
+                let hours = parseInt(time[0]);
+                let minutes = parseInt(time[1]);
 
-                return parseInt(time[0]) >= currentHour && parseInt(time[1]) > currentMinutes;
+                return hours > currentHour || hours === currentHour && minutes > currentMinutes;
             } 
         );
 

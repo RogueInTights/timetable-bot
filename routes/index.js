@@ -191,4 +191,14 @@ function check(arr) {
     return arr.length === 0;
 }
 
+router.command('sendmessage', ctx => {
+    // check admin:
+    let id = ctx.from.id;
+    if (users[id].admin) {
+        ctx.reply('Enter you message.');
+    } else {
+        ctx.reply('Only admin can send message');
+    }
+});
+
 module.exports = router

@@ -2,6 +2,7 @@ class Router {
     constructor() {
         this._body = {};
         this._state = {};
+        this._default = null;
 
         this.message = 'Такой команды нет';
     }
@@ -27,6 +28,10 @@ class Router {
         this._body[route] = callback;
     }
 
+    default(callback) {
+        this._default = callback;
+    }
+
     routes() {
         return ctx => {
             let command = '';
@@ -38,9 +43,11 @@ class Router {
                 this._body[command](ctx);
 
                 command = command.replace('/', '');
-                this._saveToState(ctx.message.from.id, command);
+                this._saveToState(ctx.from.id, command);
             } else if (command[0] === '/') {
                 ctx.reply(this.errorMessage);
+            } else {
+                this._default(ctx);
             }
         }
     }
